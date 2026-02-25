@@ -1,0 +1,127 @@
+services:
+  # ── Infrastructure ─────────────────────────────────────────────
+  # profile: core — always needed
+
+  redis:
+    image: redis:7-alpine
+    ports: ["6389:6379"]
+    volumes: [redis_data:/data]
+    command: redis-server --appendonly yes
+    restart: unless-stopped
+    profiles: [core, monitoring, dev]
+
+  # ── Backend ────────────────────────────────────────────────────
+  # profile: core
+
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: myapp:latest
+    command: uvicorn api.routes:app --host 0.0.0.0 --port 8000 --reload
+    ports: ["8090:8000"]
+    environment:
+      - REDIS_URL=${REDIS_URL:-redis://redis:6379/0}
+      - RESULT_BACKEND=${RESULT_BACKEND:-redis://redis:6379/1}
+    depends_on: [redis]
+    restart: unless-stopped
+    volumes:
+      - ./models:/app/models
+      - ./logs:/app/logs
+    profiles: [core, monitoring, dev]
+
+  worker-training:
+    image: myapp:latest
+    command: >
+      celery -A celery_app worker
+        --queues=training
+        --concurrency=1
+        --loglevel=info
+        --hostname=training@%h
+    environment:
+      - REDIS_URL=${REDIS_URL:-redis://redis:6379/0}
+      - RESULT_BACKEND=${RESULT_BACKEND:-redis://redis:6379/1}
+    depends_on: [redis, api]
+    restart: unless-stopped
+    volumes:
+      - ./models:/app/models
+      - ./logs:/app/logs
+    profiles: [core, monitoring, dev]
+
+  worker-prediction:
+    image: myapp:latest
+    command: >
+      celery -A celery_app worker
+        --queues=prediction
+        --concurrency=4
+        --loglevel=info
+        --hostname=prediction@%h
+    environment:
+      - REDIS_URL=${REDIS_URL:-redis://redis:6379/0}
+      - RESULT_BACKEND=${RESULT_BACKEND:-redis://redis:6379/1}
+    depends_on: [redis, api]
+    restart: unless-stopped
+    volumes:
+      - ./models:/app/models
+    deploy:
+      replicas: 2
+    profiles: [core, monitoring, dev]
+
+  # ── Monitoring ─────────────────────────────────────────────────
+  # profile: monitoring — Flower + Redis Commander
+
+  flower:
+    image: mher/flower:2.0
+    ports: ["5555:5555"]
+    environment:
+      - CELERY_BROKER_URL=${REDIS_URL:-redis://redis:6379/0}
+      - CELERY_RESULT_BACKEND=${RESULT_BACKEND:-redis://redis:6379/1}
+    depends_on: [redis]
+    restart: unless-stopped
+    profiles: [monitoring, dev]
+
+  redis-commander:
+    image: rediscommander/redis-commander:latest
+    platform: linux/amd64
+    ports: ["8081:8081"]
+    environment:
+      - REDIS_HOSTS=local:redis:6379
+    depends_on: [redis]
+    restart: unless-stopped
+    profiles: [monitoring, dev]
+
+  # ── Dev Tools ──────────────────────────────────────────────────
+  # profile: dev — Jupyter + Frontend (local dev only)
+
+  jupyter:
+    image: jupyter/scipy-notebook:latest
+    ports: ["8888:8888"]
+    environment:
+      - JUPYTER_ENABLE_LAB=yes
+      - JUPYTER_TOKEN=mlproject
+      - REDIS_URL=${REDIS_URL:-redis://redis:6379/0}
+      - MODEL_DIR=/home/jovyan/models
+    depends_on: [redis]
+    volumes:
+      - ./notebooks:/home/jovyan/work
+      - ./models:/home/jovyan/models
+      - ./ml:/home/jovyan/ml
+      - ./tasks:/home/jovyan/tasks
+      - ./tests:/home/jovyan/tests
+      - ./requirements.txt:/home/jovyan/requirements.txt
+    profiles: [dev]
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.frontend
+    ports: ["3000:3000"]
+    environment:
+      - VITE_API_URL=http://localhost:8090
+    depends_on: [api]
+    volumes:
+      - ./frontend/src:/app/src
+    profiles: [dev]
+
+volumes:
+  redis_data:

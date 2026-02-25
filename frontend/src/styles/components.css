@@ -1,0 +1,177 @@
+/* ── Badge ────────────────────────────────────────────────────── */
+.badge {
+  border-radius: 3px;
+  padding: 1px 7px;
+  font-size: 10px;
+  font-family: var(--mono);
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  display: inline-block;
+  color: var(--badge-color, var(--amber));
+  background: color-mix(
+    in srgb,
+    var(--badge-color, var(--amber)) 10%,
+    transparent
+  );
+  border: 1px solid
+    color-mix(in srgb, var(--badge-color, var(--amber)) 25%, transparent);
+}
+
+/* ── Button ───────────────────────────────────────────────────── */
+.btn {
+  padding: 9px 18px;
+  border-radius: 4px;
+  font-family: var(--mono);
+  font-size: 12px;
+  cursor: pointer;
+  letter-spacing: 0.5px;
+  transition:
+    opacity 0.15s,
+    transform 0.1s;
+  border: none;
+}
+.btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+.btn--primary {
+  background: var(--amber);
+  color: #080b0f;
+  font-weight: 700;
+}
+.btn--ghost {
+  background: transparent;
+  color: var(--amber);
+  border: 1px solid var(--amber-dim, #92400e);
+}
+.btn--danger {
+  background: rgba(239, 68, 68, 0.12);
+  color: var(--red);
+  border: 1px solid rgba(239, 68, 68, 0.25);
+}
+.btn--full {
+  width: 100%;
+}
+
+/* ── Card ─────────────────────────────────────────────────────── */
+.card {
+  background: var(--bg-panel);
+  border: 1px solid var(--border);
+  border-top-width: 2px;
+  border-radius: 6px;
+  overflow: hidden;
+}
+.card__header {
+  padding: 10px 18px;
+  border-bottom: 1px solid var(--border);
+  color: var(--text-lo);
+  font-size: 10px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+.card__body {
+  padding: 18px;
+}
+
+/* ── Select ───────────────────────────────────────────────────── */
+.select-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+.select-label {
+  color: var(--text-lo);
+  font-size: 10px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+}
+.select-input {
+  background: var(--bg-inset);
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 8px 10px;
+  font-family: var(--mono);
+  font-size: 12px;
+  cursor: pointer;
+  outline: none;
+}
+
+/* ── ProgressBar ──────────────────────────────────────────────── */
+.progress {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+.progress__labels {
+  display: flex;
+  justify-content: space-between;
+}
+.progress__label {
+  color: var(--text-lo);
+  font-size: 11px;
+}
+.progress__value {
+  font-size: 11px;
+}
+.progress__track {
+  background: var(--bg-inset);
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  height: 6px;
+  overflow: hidden;
+}
+.progress__fill {
+  height: 100%;
+  border-radius: 2px;
+  transition: width 0.4s ease;
+}
+
+/* ── MetricCard ───────────────────────────────────────────────── */
+.metric-card {
+  background: var(--bg-inset);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 14px 16px;
+  text-align: center;
+}
+.metric-card__label {
+  color: var(--text-lo);
+  font-size: 9px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+.metric-card__value {
+  color: var(--amber);
+  font-size: 26px;
+  font-weight: 700;
+  line-height: 1;
+}
+.metric-card__sub {
+  color: var(--text-lo);
+  font-size: 10px;
+  margin-top: 4px;
+}
+
+/* ── TerminalLog ──────────────────────────────────────────────── */
+.terminal-log {
+  background: var(--bg-inset);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 10px;
+  max-height: 140px;
+  overflow-y: auto;
+  font-family: var(--mono);
+}
+.terminal-log__empty {
+  color: var(--text-lo);
+  font-size: 11px;
+}
+.terminal-log__line {
+  font-size: 11px;
+  line-height: 1.9;
+}
+.terminal-log__prompt {
+  color: #92400e;
+}

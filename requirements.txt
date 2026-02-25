@@ -1,0 +1,18 @@
+# Celery & broker
+celery[redis]
+redis
+flower
+kombu
+
+# API
+fastapi
+uvicorn[standard]
+
+# ML (adjust to your stack)
+#torch
+scikit-learn
+numpy
+pandas
+
+# Observability
+sentry-sdk

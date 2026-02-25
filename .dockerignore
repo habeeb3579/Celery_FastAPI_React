@@ -1,0 +1,38 @@
+# ── Python ─────────────────────────────────────────────────────
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.egg-info/
+dist/
+build/
+.eggs/
+
+# ── Virtual environments ────────────────────────────────────────
+.venv/
+venv/
+env/
+
+# ── Node ───────────────────────────────────────────────────────
+frontend/node_modules/
+frontend/dist/
+
+# ── Git ────────────────────────────────────────────────────────
+.git/
+.gitignore
+
+# ── Environment ────────────────────────────────────────────────
+.env.local
+.env.*.local
+
+# ── Volumes (mounted at runtime, not baked into image) ─────────
+models/
+logs/
+
+# ── Test artifacts ─────────────────────────────────────────────
+results.json
+.pytest_cache/
+
+# ── Editor ─────────────────────────────────────────────────────
+.vscode/
+.idea/
