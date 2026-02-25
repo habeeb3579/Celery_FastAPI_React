@@ -108,11 +108,11 @@ WT --- LOGS
 
 ## Screenshots
 
-<img src="assets/homepage2.png" width="49%" />
-<img src="assets/predictpage.png" width="49%" />
+<img src="assets/homepage2.png" width="100%" />
+<img src="assets/predictpage.png" width="100%" />
 
-<img src="assets/comparepage.png" width="49%" />
-<img src="assets/explain2.png" width="49%" />
+<img src="assets/comparepage.png" width="100%" />
+<img src="assets/explain2.png" width="100%" />
 
 ## Quick Start
 
